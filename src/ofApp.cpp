@@ -12,7 +12,7 @@ void ofApp::setup(){
     font_2.load("Anders.ttf", 72);
     font_small.load("Anders.ttf", 50);
     
-    sentences.push_back(u8"はざま");
+    sentences.push_back("");
     
     
     /*-----------------------いっぱいの円-----------------------*/
@@ -30,7 +30,6 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    
     /*-----------------------いっぱいの円-----------------------*/
     for (int i=0; i<NUM; i++) {
         if (loc_x[i] < 0) {
@@ -57,15 +56,21 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 
-/*-----------------------115文字以上で改行のため-----------------------*/
+/*-----------------------100文字以上で改行のため-----------------------*/
 bool ofApp::isCountOver() {
-    return sentences.at(currentPos).length() > 110;
+    return sentences.at(currentPos).length() > 100;
+    
+    /*-----------------------カーソル（？）-----------------------*/
+    cursor_y1 += 10;
+    cursor_y2 += 10;
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    
     ofSetColor(255, 255, 255);//白色
+    
+    /*-----------------------カーソル（？）-----------------------*/
+    ofDrawLine(cursor_x1, cursor_y1, cursor_x2, cursor_y2);
     
     /*-----------------------文字を書くためのBox-----------------------*/
     ofNoFill();
@@ -83,12 +88,11 @@ void ofApp::draw(){
         height += y;
     }
     
-    
     /*-----------------------"a"が押された時-----------------------*/
     if(count_a == 1){
         for(int i = 0; i < 5; i++){
             ofSetColor(255,255,255);
-            font_2.drawString("a", ofGetWidth()/2 - 22, ofGetHeight()/2 + 20);
+            font_2.drawString("a", ofGetWidth()/2 - 30, ofGetHeight()/2 + 20);
             
             ofNoFill();
             ofSetColor(ofRandom(100, 255), ofRandom(100, 255), ofRandom(100, 255));
@@ -140,11 +144,25 @@ void ofApp::draw(){
 void ofApp::keyPressed(int key){
     sentences.at(currentPos) += key;
     
+    /*-----------------------カーソル（？）-----------------------*/
+    cursor_x1 += 8.05;
+    cursor_x2 += 8.05;
+
     /*--------------------"enter"が押された時改行--------------------*/
     if (key == 13 || isCountOver()) {   //enterは13(?)
         sentences.push_back("");
         currentPos++;
+        
+        /*-----------------------カーソル（？）-----------------------*/
+        cursor_y1 += 10;
+        cursor_y2 += 10;
+        cursor_x1 = 100;
+        cursor_x2 = 100;
     }
+    
+    /*--------------------"delete"が押された時--------------------*/
+    
+    
     
     /*--------------------"a"が押された時--------------------*/
     if(key == 'a'){
@@ -194,7 +212,6 @@ void ofApp::keyReleased(int key){
 
 
 }
-
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y ){
     

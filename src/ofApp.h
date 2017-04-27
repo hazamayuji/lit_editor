@@ -56,9 +56,18 @@ class ofApp : public ofBaseApp{
     /*-----------------------"a"の時必要-----------------------*/
     float radius =30;
     
-    
     /*---------------------フォントについて---------------------*/
     ofTrueTypeFont font;
     ofTrueTypeFont font_2;//フォントを使用
     ofTrueTypeFont font_small;
+    
+    /*-----------------------カーソル（？）-----------------------*/
+    float cursor_x1 = 100;
+    float cursor_x2 = 100;
+    float cursor_y1 = 100;
+    float cursor_y2 = 112;
+
 };
+
+
+
