@@ -104,7 +104,6 @@ void ofApp::draw(){
         
         ofSetColor(255, 255, 255);
         type_word.drawString(sentence, word_box_x + 10, start_y + word_height);
-        //ofDrawBitmapString(sentence, word_box_x + 10, start_y + word_height);//文字描画
         word_height += y;
         
     }
@@ -118,7 +117,7 @@ void ofApp::draw(){
 
     /*-----------------------キーボード押したときにランダムでアニメーションを描画-----------------------*/
     
-    if(rand == 1){
+    if(rand == 0){
         for(int i = 0; i < 5; i++){
             ofSetColor(255,255,255);
             ofNoFill();
@@ -126,7 +125,7 @@ void ofApp::draw(){
             ofDrawCircle(ofGetWidth()/2, ofGetHeight()/2, i * 10 * ofRandom(8,15) );
             }
         
-    }else if(rand == 2){
+    }else if(rand == 1){
             for(int i = 0; i < 5; i++){
             ofSetColor(255,255,255);
             ofNoFill();
@@ -134,21 +133,20 @@ void ofApp::draw(){
             ofDrawTriangle(ofRandom(0,ofGetWidth()), ofRandom(0,768),ofRandom(0,ofGetWidth()), ofRandom(0,768), ofRandom(0,ofGetWidth()), ofRandom(0,768));
             
             }
-    }else if(rand == 3){
+    }else if(rand == 2){
         for(int i = 0; i < 5; i++){
             ofSetColor(255,255,255);
             ofNoFill();
             ofSetColor(ofRandom(100, 255), ofRandom(100, 255), ofRandom(100, 255));
             ofDrawRectangle(ofRandom(0,ofGetWidth()), ofRandom(0,768),ofRandom(0,ofGetWidth()), ofRandom(0,768));
             }
-    }else if(rand == 4){
+    }else if(rand == 3){
         for (int i=0; i<NUM; i++) {
             ofNoFill();
             ofSetColor(red[i], green[i], blue[i],127);
             ofDrawCircle(loc_x[i], loc_y[i], radius_key[i]);
             }
     }
-    
    
    /*------------------いらんけど大事なこと(ofximgui)-------------------*
     *          ofFill();//ofximgui　　　　　　　　　                   *
@@ -161,8 +159,6 @@ void ofApp::draw(){
     *---------------------------------------------------------------*/
 }
 
-
-
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     cout << key << endl;//文字の番号確認用
@@ -174,7 +170,7 @@ void ofApp::keyPressed(int key){
         cursor_x2 += 8.05;
         
         /*--------------キーボード押したときにランダムでアニメーションを描画--------------*/
-        rand = ofRandom(1,4);
+        rand = ofRandom(0,3);
     }
     
     pressed_key = key;//キーボードおしたとき
@@ -186,21 +182,17 @@ void ofApp::keyPressed(int key){
         sentences.push_back("");
         currentPos++;
         
-        /*-----------------------カーソル-----------------------*/
+    /*-----------------------カーソル-----------------------*/
         cursor_y1 += 10;
         cursor_y2 += 10;
         cursor_x1 = 100;
         cursor_x2 = 100;
     }
     
-     /*--------------------"delete"おしたとき（まだ）--------------------*/
+     /*--------------------"delete"おしたとき--------------------*/
     if (key == 127 && sentences.at(currentPos).size() > 0) {//delete"は8
         sentences.at(currentPos).pop_back();
     }
-    
-    
-    
-    
 }
 
 
@@ -219,10 +211,6 @@ void ofApp::mouseMoved(int x, int y ){
     }else{
         onButton = false;
     }
-    
-    
-    
-
 }
 
 //--------------------------------------------------------------
@@ -235,8 +223,6 @@ void ofApp::mousePressed(int x, int y, int button){
     
     /*-----------------------Send„ボタン-----------------------*/
     if (mouseX > send_box_x && mouseX < ofGetWidth() - send_box_x && mouseY > 440 && mouseY < 540 ){
-        
-        
         clickButton = true;
     }
 }
