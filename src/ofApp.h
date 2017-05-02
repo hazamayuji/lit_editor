@@ -1,11 +1,17 @@
 #pragma once
 #include "ofMain.h"
+//#include "ofxImGui.h"
 
-//editorの部分
+//vector配列
 #include <vector>
+#include "ofxOsc.h"
 
-//いっぱいの円に必要
+//いっぱいの円
 #define NUM 300
+
+//ofxOsc(送信のやつ)
+#define HOST "127.0.0.1"
+#define PORT 8020
 
 class ofApp : public ofBaseApp{
 
@@ -14,7 +20,7 @@ class ofApp : public ofBaseApp{
 		void update();
 		void draw();
     
-        bool isCountOver();//改行のため
+        bool isCountOver();//
 		void keyPressed(int key);
 		void keyReleased(int key);
 		void mouseMoved(int x, int y );
@@ -27,21 +33,25 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-    /*-----------------------editorの部分-----------------------*/
-    std::vector<string> sentences;//動的配列
-    int currentPos = 0;//配列の最初は0 currentPos = 現在の位置
+        void displayChar(int key);
     
-    int x = 100;
-    int y = 10;
-
+    /*-----------------------editor-----------------------*/
+    std::vector<string> sentences;//無限に行いける
+    int currentPos = 0;//行のカウント
+    
+    /*----------------------文字かくやつ------------------------*/
+    int y = 30;
     int start_y = 100;
+    int word_height = y;
     
     
-    /*---------------------key_pressedで使用---------------------*/
-    int count_a = 0;
-    int count_b = 0;
-    int count_c = 0;
-    int count_d = 0;
+    /*---------------------入力に必要---------------------*/
+//過去の栄光
+//    int count_a = 0;
+//    int count_b = 0;
+//    int count_c = 0;
+//    int count_d = 0;
+    int pressed_key = 0;
     
     /*-----------------------いっぱいの円-----------------------*/
     float loc_x[NUM];
@@ -53,20 +63,40 @@ class ofApp : public ofBaseApp{
     float green[NUM];
     float blue[NUM];
     
-    /*-----------------------"a"の時必要-----------------------*/
+    /*-----------------------ひろがる円-----------------------*/
     float radius =30;
     
-    /*---------------------フォントについて---------------------*/
-    ofTrueTypeFont font;
-    ofTrueTypeFont font_2;//フォントを使用
-    ofTrueTypeFont font_small;
+    /*---------------------フォント---------------------*/
+    ofTrueTypeFont font_draw;//真ん中にでる文字
+    ofTrueTypeFont font_const_word;
+    ofTrueTypeFont type_word;
     
-    /*-----------------------カーソル（？）-----------------------*/
+    
+    /*-----------------------カーソル-----------------------*/
     float cursor_x1 = 100;
     float cursor_x2 = 100;
     float cursor_y1 = 100;
     float cursor_y2 = 112;
+    
+    /*-----------------------Sendのボタン-----------------------*/
+    //ofxImGui::Gui gui;(つかわいないけどいる）
+    bool onButton = false;
+    bool clickButton = false;
+    
+    const float send_box_x = 100;
+    const float send_box_y = 440;
 
+    /*-----------------------ofxOsc(送信のやつ)-----------------------*/
+    ofxOscSender sender;//OSCメッセージの送信者
+    
+    /*-----------------------文字入れるBox-----------------------*/
+    const float word_box_x = 50;
+    const float word_box_y = 90;
+    
+    /*--------------キーボード押したときにランダムでアニメーションを描画--------------*/
+    int rand;
+    
+    
 };
 
 
