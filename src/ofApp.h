@@ -37,6 +37,8 @@ class ofApp : public ofBaseApp{
     
     /*-----------------------editor-----------------------*/
     std::vector<string> sentences;//無限に行いける
+    //std::array<string, 10> ar;
+    
     int currentPos = 0;//行のカウント
     
     /*----------------------文字かくやつ------------------------*/
@@ -73,10 +75,10 @@ class ofApp : public ofBaseApp{
     
     
     /*-----------------------カーソル-----------------------*/
-    float cursor_x1 = 100;
-    float cursor_x2 = 100;
-    float cursor_y1 = 100;
-    float cursor_y2 = 112;
+    float cursor_x1 = 65;
+    float cursor_x2 = 65;
+    float cursor_y1 = 105;
+    float cursor_y2 = 140;
     
     /*-----------------------Sendのボタン-----------------------*/
     //ofxImGui::Gui gui;(つかわいないけどいる）

@@ -7,12 +7,12 @@ void ofApp::setup(){
     ofEnableAlphaBlending();
     ofSetFrameRate(60);
     
+    /*----------------------フォントを指定----------------------*/
     font_draw.load("Anders.ttf", 72);
     font_const_word.load("Anders.ttf", 50);
     type_word.load("Anders.ttf", 20);
     
     sentences.push_back("");
-    
     
     /*----------------------いっぱいの円----------------------*/
     for (int i=0; i<NUM; i++) {
@@ -60,7 +60,7 @@ void ofApp::update(){
 
 /*-----------------------100文字超えたら改行-----------------------*/
 bool ofApp::isCountOver() {
-    return sentences.at(currentPos).length() > 100;
+    return sentences.at(currentPos).length() > 24;
     
     /*-----------------------カーソル-----------------------*/
     cursor_y1 += 10;
@@ -71,9 +71,26 @@ bool ofApp::isCountOver() {
 void ofApp::draw(){
     ofSetColor(255, 255, 255);
     
+    /*-----------------------定規-----------------------*/
+    
+    ofDrawLine(0, 200, ofGetWidth(), 200);
+    for(int i; i < ofGetWidth();  i = i + 10){
+        ofDrawLine(i, 190, i, 200);
+    }
+    
+    ofDrawLine(200, 0, 200, ofGetHeight());
+    for(int i = 0; i < ofGetHeight();  i = i + 10){
+        ofDrawLine(190, i, 200, i);
+    }
+
+    
+    
+    
     /*-----------------------カーソルの描画-----------------------*/
+    /*
     ofDrawLine(cursor_x1, cursor_y1, cursor_x2, cursor_y2);
     
+     
     /*-----------------------文字を入れるBox-----------------------*/
     ofNoFill();
     ofDrawRectangle(word_box_x, word_box_y, ofGetWidth() - word_box_x * 2, ofGetHeight() - word_box_y * 5);
@@ -149,7 +166,7 @@ void ofApp::draw(){
     }
    
    /*------------------いらんけど大事なこと(ofximgui)-------------------*
-    *          ofFill();//ofximgui　　　　　　　　　                   *
+    *          ofFill();//ofximgui                                  *
     *          gui.begin();                                         *
     *           if(ImGui::Button("Test Window"))                    *
     *           {                                                   *
@@ -162,15 +179,22 @@ void ofApp::draw(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     cout << key << endl;//文字の番号確認用
+    
+    /*-----------------------ofxOsc(送信のやつ)-----------------------*/
+
+    
 
     if(key >= 32 && key != 127) {
         sentences.at(currentPos) += key;
+        
         /*-----------------------カーソル-----------------------*/
-        cursor_x1 += 8.05;
-        cursor_x2 += 8.05;
+        /*
+        cursor_x1 += 21;
+        cursor_x2 += 21;
+        */
         
         /*--------------キーボード押したときにランダムでアニメーションを描画--------------*/
-        rand = ofRandom(0,3);
+        rand = ofRandom(0,4);
     }
     
     pressed_key = key;//キーボードおしたとき
@@ -179,14 +203,16 @@ void ofApp::keyPressed(int key){
 
     /*--------------------"enter"を押したとき改行--------------------*/
     if (key == 13 || isCountOver()) {   //enterは13
-        sentences.push_back("");
+        //ar.push_back("");
         currentPos++;
         
     /*-----------------------カーソル-----------------------*/
-        cursor_y1 += 10;
-        cursor_y2 += 10;
-        cursor_x1 = 100;
-        cursor_x2 = 100;
+        /*
+        cursor_y1 += 30;
+        cursor_y2 += 30;
+        cursor_x1 = 65;
+        cursor_x2 = 65;
+         */
     }
     
      /*--------------------"delete"おしたとき--------------------*/
@@ -205,8 +231,6 @@ void ofApp::mouseMoved(int x, int y ){
     
     /*-----------------------Sendカバー-----------------------*/
     if(mouseX > send_box_x && mouseX < ofGetWidth() - send_box_x && mouseY > 440 && mouseY < 540 ){
-        
-        //send_box_x, send_box_y, ofGetWidth() - send_box_x * 2, 100
         onButton = true;
     }else{
         onButton = false;
@@ -224,6 +248,16 @@ void ofApp::mousePressed(int x, int y, int button){
     /*-----------------------Send„ボタン-----------------------*/
     if (mouseX > send_box_x && mouseX < ofGetWidth() - send_box_x && mouseY > 440 && mouseY < 540 ){
         clickButton = true;
+        
+        ofxOscMessage m;
+        m.setAddress("/key/sentences");
+        int num = sentences.size();
+        m.addIntArg(num);
+        for (string sentence :sentences) {
+            m.addStringArg(sentence);
+        }
+        sender.sendMessage(m);
+        
     }
 }
 
