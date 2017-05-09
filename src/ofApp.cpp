@@ -249,14 +249,26 @@ void ofApp::mousePressed(int x, int y, int button){
     if (mouseX > send_box_x && mouseX < ofGetWidth() - send_box_x && mouseY > 440 && mouseY < 540 ){
         clickButton = true;
         
+        
+        
+        
+        /*-----------------------OSC部分-----------------------*/
         ofxOscMessage m;
         m.setAddress("/key/sentences");
-        int num = sentences.size();
+        int num = sentences.size();//行数を計測
         m.addIntArg(num);
         for (string sentence :sentences) {
             m.addStringArg(sentence);
         }
         sender.sendMessage(m);
+        
+        
+        
+        
+        
+        
+        
+        
         
     }
 }
