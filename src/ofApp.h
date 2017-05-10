@@ -4,12 +4,12 @@
 
 //vector配列
 #include <vector>
-#include "ofxOsc.h"
 
 //いっぱいの円
 #define NUM 300
 
 //ofxOsc(送信のやつ)
+#include "ofxOsc.h"
 #define HOST "127.0.0.1"
 #define PORT 8020
 
@@ -20,7 +20,12 @@ class ofApp : public ofBaseApp{
 		void update();
 		void draw();
     
-        bool isCountOver();//
+    void main();
+    
+        /*------------------追加要素------------------*/
+        bool isCountOver();
+        void displayChar(int key);
+    
 		void keyPressed(int key);
 		void keyReleased(int key);
 		void mouseMoved(int x, int y );
@@ -33,11 +38,11 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-        void displayChar(int key);
+    
     
     /*-----------------------editor-----------------------*/
+    //std::array<string, 10> sentences;//10行までに制限(?)
     std::vector<string> sentences;//無限に行いける
-    //std::array<string, 10> ar;
     
     int currentPos = 0;//行のカウント
     
@@ -46,13 +51,7 @@ class ofApp : public ofBaseApp{
     int start_y = 100;
     int word_height = y;
     
-    
     /*---------------------入力に必要---------------------*/
-//過去の栄光
-//    int count_a = 0;
-//    int count_b = 0;
-//    int count_c = 0;
-//    int count_d = 0;
     int pressed_key = 0;
     
     /*-----------------------いっぱいの円-----------------------*/
@@ -72,7 +71,6 @@ class ofApp : public ofBaseApp{
     ofTrueTypeFont font_draw;//真ん中にでる文字
     ofTrueTypeFont font_const_word;
     ofTrueTypeFont type_word;
-    
     
     /*-----------------------カーソル-----------------------*/
     float cursor_x1 = 65;

@@ -2,6 +2,8 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    
+    
     ofBackground(0, 0, 0);
     ofSetCircleResolution(60);
     ofEnableAlphaBlending();
@@ -13,7 +15,6 @@ void ofApp::setup(){
     type_word.load("Anders.ttf", 20);
     
     sentences.push_back("");
-    
     /*----------------------いっぱいの円----------------------*/
     for (int i=0; i<NUM; i++) {
         loc_x[i] = ofRandom(0,ofGetWidth());
@@ -53,12 +54,11 @@ void ofApp::update(){
         loc_x[i] = loc_x[i] + speed_x[i];
         loc_y[i] = loc_y[i] + speed_y[i];
     }
-
 }
 
 //--------------------------------------------------------------
 
-/*-----------------------100文字超えたら改行-----------------------*/
+/*-----------------------24文字超えたら改行-----------------------*/
 bool ofApp::isCountOver() {
     return sentences.at(currentPos).length() > 24;
     
@@ -83,12 +83,8 @@ void ofApp::draw(){
         ofDrawLine(190, i, 200, i);
     }
 
-    
-    
-    
     /*-----------------------カーソルの描画-----------------------*/
-    /*
-    ofDrawLine(cursor_x1, cursor_y1, cursor_x2, cursor_y2);
+    //ofDrawLine(cursor_x1, cursor_y1, cursor_x2, cursor_y2);
     
      
     /*-----------------------文字を入れるBox-----------------------*/
@@ -112,13 +108,11 @@ void ofApp::draw(){
         ofSetColor(255, 255, 255);
         font_const_word.drawString("thank you", ofGetWidth()/2-220 , ofGetHeight()/2);
     }
-
     
     /*----------------------文字かくやつ------------------------*/
     int word_height = y;
     
     for (string sentence : sentences) {
-        
         ofSetColor(255, 255, 255);
         type_word.drawString(sentence, word_box_x + 10, start_y + word_height);
         word_height += y;
@@ -180,10 +174,6 @@ void ofApp::draw(){
 void ofApp::keyPressed(int key){
     cout << key << endl;//文字の番号確認用
     
-    /*-----------------------ofxOsc(送信のやつ)-----------------------*/
-
-    
-
     if(key >= 32 && key != 127) {
         sentences.at(currentPos) += key;
         
@@ -198,12 +188,10 @@ void ofApp::keyPressed(int key){
     }
     
     pressed_key = key;//キーボードおしたとき
-    
-
 
     /*--------------------"enter"を押したとき改行--------------------*/
     if (key == 13 || isCountOver()) {   //enterは13
-        //ar.push_back("");
+        sentences.push_back("");
         currentPos++;
         
     /*-----------------------カーソル-----------------------*/
@@ -213,14 +201,14 @@ void ofApp::keyPressed(int key){
         cursor_x1 = 65;
         cursor_x2 = 65;
          */
+        
     }
     
-     /*--------------------"delete"おしたとき--------------------*/
+    /*--------------------"delete"おしたとき--------------------*/
     if (key == 127 && sentences.at(currentPos).size() > 0) {//delete"は8
         sentences.at(currentPos).pop_back();
     }
 }
-
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
@@ -245,9 +233,28 @@ void ofApp::mouseDragged(int x, int y, int button){
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
     
-    /*-----------------------Send„ボタン-----------------------*/
+    /*-----------------------Sendボタン-----------------------*/
     if (mouseX > send_box_x && mouseX < ofGetWidth() - send_box_x && mouseY > 440 && mouseY < 540 ){
         clickButton = true;
+        
+        
+        
+        
+        /*-----------------------Sendボタンを押したら文字を全部削除-----------------------*/
+        
+        
+        
+        
+        //sentences.erase(sentences.begin(),sentences.begin()+23);//間違い？？？
+
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
@@ -261,17 +268,10 @@ void ofApp::mousePressed(int x, int y, int button){
             m.addStringArg(sentence);
         }
         sender.sendMessage(m);
-        
-        
-        
-        
-        
-        
-        
-        
-        
     }
+
 }
+
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
@@ -285,7 +285,6 @@ void ofApp::mouseReleased(int x, int y, int button){
 //--------------------------------------------------------------
 void ofApp::mouseEntered(int x, int y){
 
-    
 }
 
 
