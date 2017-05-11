@@ -2,8 +2,6 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    
-    
     ofBackground(0, 0, 0);
     ofSetCircleResolution(60);
     ofEnableAlphaBlending();
@@ -72,6 +70,7 @@ void ofApp::draw(){
     ofSetColor(255, 255, 255);
     
     /*-----------------------定規-----------------------*/
+    /*
     
     ofDrawLine(0, 200, ofGetWidth(), 200);
     for(int i; i < ofGetWidth();  i = i + 10){
@@ -83,6 +82,8 @@ void ofApp::draw(){
         ofDrawLine(190, i, 200, i);
     }
 
+     */
+    
     /*-----------------------カーソルの描画-----------------------*/
     //ofDrawLine(cursor_x1, cursor_y1, cursor_x2, cursor_y2);
     
@@ -168,11 +169,18 @@ void ofApp::draw(){
     *            }                                                  *
     *          gui.end();                                           *
     *---------------------------------------------------------------*/
+    
+    
+    if(currentPos > 10){
+        ofSetColor(255,255,255);
+        font_const_word.drawString("Stop", ofGetWidth()/2-220 , ofGetHeight()/2);
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     cout << key << endl;//文字の番号確認用
+    cout << currentPos << endl;
     
     if(key >= 32 && key != 127) {
         sentences.at(currentPos) += key;
@@ -205,8 +213,13 @@ void ofApp::keyPressed(int key){
     }
     
     /*--------------------"delete"おしたとき--------------------*/
-    if (key == 127 && sentences.at(currentPos).size() > 0) {//delete"は8
+    if (key == 127 && sentences.at(currentPos).size() > 0) {
         sentences.at(currentPos).pop_back();
+        
+        if (sentences.at(currentPos).length() <= 0) {
+            currentPos --;
+        }
+        
     }
 }
 
@@ -237,28 +250,6 @@ void ofApp::mousePressed(int x, int y, int button){
     if (mouseX > send_box_x && mouseX < ofGetWidth() - send_box_x && mouseY > 440 && mouseY < 540 ){
         clickButton = true;
         
-        
-        
-        
-        /*-----------------------Sendボタンを押したら文字を全部削除-----------------------*/
-        
-        
-        
-        
-        //sentences.erase(sentences.begin(),sentences.begin()+23);//間違い？？？
-
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         /*-----------------------OSC部分-----------------------*/
         ofxOscMessage m;
         m.setAddress("/key/sentences");
@@ -268,6 +259,12 @@ void ofApp::mousePressed(int x, int y, int button){
             m.addStringArg(sentence);
         }
         sender.sendMessage(m);
+        
+        
+        /*-----------------------Sendボタンを押したら文字を全部削除-----------------------*/
+        sentences.clear();
+        sentences.push_back("");
+        currentPos = 0;
     }
 
 }
