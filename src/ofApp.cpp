@@ -1,10 +1,17 @@
 #include "ofApp.h"
+#include  <iostream>
+#include <string>
+#include <fstream>
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    //背景を黒に
     ofBackground(0, 0, 0);
+    //円のまわりを滑らかに
     ofSetCircleResolution(60);
+    //透明度を設定可能に
     ofEnableAlphaBlending();
+    //フレームレートを60に
     ofSetFrameRate(60);
     
     /*----------------------フォントを指定----------------------*/
@@ -12,9 +19,11 @@ void ofApp::setup(){
     font_const_word.load("Anders.ttf", 50);
     type_word.load("Anders.ttf", 20);
     
-    sentences.push_back("");
+    //sentenceの最後に空白を追加
+    sentences.push_back("\n");
     /*----------------------いっぱいの円----------------------*/
     for (int i=0; i<NUM; i++) {
+        //値をランダムで生成（setupなので１回）
         loc_x[i] = ofRandom(0,ofGetWidth());
         loc_y[i] = ofRandom(0,ofGetHeight());
         speed_x[i] = ofRandom(-10,10);
@@ -26,6 +35,7 @@ void ofApp::setup(){
     }
     
     /*-----------------------ofxOsc(送信のやつ)-----------------------*/
+    //OSC通信の準備
     sender.setup(HOST,PORT);
 }
 
@@ -61,8 +71,10 @@ bool ofApp::isCountOver() {
     return sentences.at(currentPos).length() > 24;
     
     /*-----------------------カーソル-----------------------*/
+    /*
     cursor_y1 += 10;
     cursor_y2 += 10;
+    */
 }
 
 //--------------------------------------------------------------
@@ -89,17 +101,21 @@ void ofApp::draw(){
     
      
     /*-----------------------文字を入れるBox-----------------------*/
+    //中抜き
     ofNoFill();
     ofDrawRectangle(word_box_x, word_box_y, ofGetWidth() - word_box_x * 2, ofGetHeight() - word_box_y * 5);
     
     /*-----------------------Sendのbox(枠)-----------------------*/
+    //中抜き
     ofNoFill();
     ofDrawRectangle(send_box_x, send_box_y, ofGetWidth() - send_box_x * 2, 100);
     font_const_word.drawString("Send", ofGetWidth()/2-90 , ofGetHeight()/2 + 135);
     
     /*-----------------------Sendのカバー(しろ)-----------------------*/
     if(onButton){
+        //ここまでofNoFillできたからここで変更
         ofFill();
+        //透明度を追加することによってカバーを生成
         ofSetColor(255, 255, 255, 127);
         ofDrawRectangle(send_box_x, send_box_y, ofGetWidth() - send_box_x * 2, 100);
     }
@@ -115,14 +131,16 @@ void ofApp::draw(){
     
     for (string sentence : sentences) {
         ofSetColor(255, 255, 255);
+        //sentenceという行に文字列を代入
         type_word.drawString(sentence, word_box_x + 10, start_y + word_height);
+        //それが新しいのを生成したらyをプラス
         word_height += y;
-        
     }
     
     /*-----------------------キーボード押したときに字を描画-----------------------*/
     
     if(pressed_key <= 0) return;//0以下（a(数字になる)などなにもしていないときは終了）
+    //tmpという文字列を生成してそこに空白を代入
     string tmp = "";
     tmp += pressed_key;
     font_draw.drawString(tmp, ofGetWidth()/2 - 30, ofGetHeight()/2 + 20);
@@ -199,7 +217,7 @@ void ofApp::keyPressed(int key){
 
     /*--------------------"enter"を押したとき改行--------------------*/
     if (key == 13 || isCountOver()) {   //enterは13
-        sentences.push_back("");
+        sentences.push_back("\n");
         currentPos++;
         
     /*-----------------------カーソル-----------------------*/
@@ -251,11 +269,17 @@ void ofApp::mousePressed(int x, int y, int button){
         clickButton = true;
         
         /*-----------------------OSC部分-----------------------*/
+        //OSCメッセージの準備
         ofxOscMessage m;
+        //OSCアドレスの設定
         m.setAddress("/key/sentences");
-        int num = sentences.size();//行数を計測
+        //行数を計測
+        int num = sentences.size();
+        //numの数字を送信
         m.addIntArg(num);
-        for (string sentence :sentences) {
+        
+        for (string sentence : sentences) {
+            //OSC引数として、sentenceを送信
             m.addStringArg(sentence);
         }
         sender.sendMessage(m);
@@ -263,8 +287,14 @@ void ofApp::mousePressed(int x, int y, int button){
         
         /*-----------------------Sendボタンを押したら文字を全部削除-----------------------*/
         sentences.clear();
-        sentences.push_back("");
+        sentences.push_back("\n");
         currentPos = 0;
+        
+        /*-----------------------Sendボタンを押したら文字を.txtのファイルで出力----------------------*/
+        /*
+        std::ofstream out_file("Desktop/of_v0.9.8_osx_release/apps/myApps/lit_editor/bin/data/test01.txt");
+        std::ios::app (sentences);
+        */
     }
 
 }

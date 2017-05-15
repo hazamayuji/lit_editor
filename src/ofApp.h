@@ -20,7 +20,6 @@ class ofApp : public ofBaseApp{
 		void update();
 		void draw();
     
-    void main();
     
         /*------------------追加要素------------------*/
         bool isCountOver();
@@ -48,7 +47,7 @@ class ofApp : public ofBaseApp{
     
     /*----------------------文字かくやつ------------------------*/
     int y = 30;
-    int start_y = 100;
+    int start_y = 70;
     int word_height = y;
     
     /*---------------------入力に必要---------------------*/
