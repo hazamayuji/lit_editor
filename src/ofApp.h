@@ -96,6 +96,11 @@ class ofApp : public ofBaseApp{
     int rand;
     
     
+    
+    int size_circle = 0;
+    float *volume;
+    ofSoundPlayer soundplayer;
+    
 };
 
 

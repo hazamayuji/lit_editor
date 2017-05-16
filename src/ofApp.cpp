@@ -37,10 +37,22 @@ void ofApp::setup(){
     /*-----------------------ofxOsc(送信のやつ)-----------------------*/
     //OSC通信の準備
     sender.setup(HOST,PORT);
+    
+    soundplayer.load("Eden.mp3");
+    soundplayer.setLoop(true);
+    soundplayer.setVolume(1.0);
+    soundplayer.play();
+
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    volume = ofSoundGetSpectrum(1);
+    size_circle = volume[0]*90;
+    
+
+    
     /*-----------------------いっぱいの円----------------------*/
     for (int i=0; i<NUM; i++) {
         if (loc_x[i] < 0) {
@@ -62,13 +74,17 @@ void ofApp::update(){
         loc_x[i] = loc_x[i] + speed_x[i];
         loc_y[i] = loc_y[i] + speed_y[i];
     }
+    
+
+    
+
 }
 
 //--------------------------------------------------------------
 
 /*-----------------------24文字超えたら改行-----------------------*/
 bool ofApp::isCountOver() {
-    return sentences.at(currentPos).length() > 24;
+    return sentences.at(currentPos).length() > 23;
     
     /*-----------------------カーソル-----------------------*/
     /*
@@ -79,7 +95,35 @@ bool ofApp::isCountOver() {
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+ 
+    
+  
+    
+    ofFill();
+    for(int i = 0; i < 30; i++){
+        ofSetColor(red[i], green[i], blue[i]);
+    ofDrawCircle(ofRandom(30,word_box_x), ofRandom(word_box_y,ofGetHeight() - word_box_y * 4 ), size_circle);
+    }
+    
+    for(int i = 0; i < 30; i++){
+        ofSetColor(red[i], green[i], blue[i]);
+        ofDrawCircle(ofRandom(ofGetWidth()-word_box_x, ofGetWidth()- 20), ofRandom(word_box_y,ofGetHeight() - word_box_y * 4), size_circle);
+    }
+    
+    for(int i = 0; i < 60; i++){
+        ofSetColor(red[i], green[i], blue[i]);
+        ofDrawCircle(ofRandom(30, ofGetWidth()-30), ofRandom(60,word_box_y), size_circle);
+    }
+
+    for(int i = 0; i < 60; i++){
+        ofSetColor(red[i], green[i], blue[i]);
+        ofDrawCircle(ofRandom(30, ofGetWidth() -30), ofRandom(ofGetHeight() - word_box_y * 4,ofGetHeight() - word_box_y * 3 - 50), size_circle);
+    }
+
+    
+    
     ofSetColor(255, 255, 255);
+
     
     /*-----------------------定規-----------------------*/
     /*
@@ -103,13 +147,15 @@ void ofApp::draw(){
     /*-----------------------文字を入れるBox-----------------------*/
     //中抜き
     ofNoFill();
-    ofDrawRectangle(word_box_x, word_box_y, ofGetWidth() - word_box_x * 2, ofGetHeight() - word_box_y * 5);
+    //ofDrawRectangle(word_box_x, word_box_y, ofGetWidth() - word_box_x * 2, ofGetHeight() - word_box_y * 5);
     
     /*-----------------------Sendのbox(枠)-----------------------*/
     //中抜き
     ofNoFill();
-    ofDrawRectangle(send_box_x, send_box_y, ofGetWidth() - send_box_x * 2, 100);
-    font_const_word.drawString("Send", ofGetWidth()/2-90 , ofGetHeight()/2 + 135);
+    ofSetColor(size_circle* 100,255,  255);
+    ofDrawRectangle(send_box_x, send_box_y + 70, ofGetWidth() - send_box_x * 2, 100);
+    ofSetColor(255, 255, size_circle* 100);
+    font_const_word.drawString("Send", ofGetWidth()/2-90 , ofGetHeight()/2 + 205);
     
     /*-----------------------Sendのカバー(しろ)-----------------------*/
     if(onButton){
@@ -117,7 +163,7 @@ void ofApp::draw(){
         ofFill();
         //透明度を追加することによってカバーを生成
         ofSetColor(255, 255, 255, 127);
-        ofDrawRectangle(send_box_x, send_box_y, ofGetWidth() - send_box_x * 2, 100);
+        ofDrawRectangle(send_box_x, send_box_y + 70, ofGetWidth() - send_box_x * 2, 100);
     }
     
     /*-----------------------Sendのボタン(アクション)-----------------------*/
@@ -193,6 +239,11 @@ void ofApp::draw(){
         ofSetColor(255,255,255);
         font_const_word.drawString("Stop", ofGetWidth()/2-220 , ofGetHeight()/2);
     }
+    
+  
+    
+    
+    
 }
 
 //--------------------------------------------------------------
@@ -237,7 +288,6 @@ void ofApp::keyPressed(int key){
         if (sentences.at(currentPos).length() <= 0) {
             currentPos --;
         }
-        
     }
 }
 
@@ -249,7 +299,7 @@ void ofApp::keyReleased(int key){
 void ofApp::mouseMoved(int x, int y ){
     
     /*-----------------------Sendカバー-----------------------*/
-    if(mouseX > send_box_x && mouseX < ofGetWidth() - send_box_x && mouseY > 440 && mouseY < 540 ){
+    if(mouseX > send_box_x && mouseX < ofGetWidth() - send_box_x && mouseY > 440 + 70 && mouseY < 540 +70 ){
         onButton = true;
     }else{
         onButton = false;
@@ -265,7 +315,7 @@ void ofApp::mouseDragged(int x, int y, int button){
 void ofApp::mousePressed(int x, int y, int button){
     
     /*-----------------------Sendボタン-----------------------*/
-    if (mouseX > send_box_x && mouseX < ofGetWidth() - send_box_x && mouseY > 440 && mouseY < 540 ){
+    if (mouseX > send_box_x && mouseX < ofGetWidth() - send_box_x && mouseY > 440 + 70 && mouseY < 540 + 70 ){
         clickButton = true;
         
         /*-----------------------OSC部分-----------------------*/
@@ -292,19 +342,21 @@ void ofApp::mousePressed(int x, int y, int button){
         
         /*-----------------------Sendボタンを押したら文字を.txtのファイルで出力----------------------*/
         /*
-        std::ofstream out_file("Desktop/of_v0.9.8_osx_release/apps/myApps/lit_editor/bin/data/test01.txt");
-        std::ios::app (sentences);
+        string filename = "test01.txt";
+        trunc (sentences);
+        ofstream out_file("Desktop/of_v0.9.8_osx_release/apps/myApps/lit_editor/bin/data/test01.txt");
         */
     }
-
+    
 }
+    
 
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
     
     /*-----------------------Sendボタン-----------------------*/
-    if (mouseX > send_box_x && mouseX < ofGetWidth() - send_box_x && mouseY > 440 && mouseY < 540 ){
+    if (mouseX > send_box_x && mouseX < ofGetWidth() - send_box_x && mouseY > 440 +70 && mouseY < 540 + 70 ){
         clickButton =false;
     }
 }
