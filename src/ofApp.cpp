@@ -38,20 +38,18 @@ void ofApp::setup(){
     //OSC通信の準備
     sender.setup(HOST,PORT);
     
+    /*-----------------------音楽を再生&ループ----------------------*/
     soundplayer.load("Eden.mp3");
     soundplayer.setLoop(true);
     soundplayer.setVolume(1.0);
     soundplayer.play();
-
-    
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    /*-----------------------音の大きさで半径変わる円----------------------*/
     volume = ofSoundGetSpectrum(1);
     size_circle = volume[0]*90;
-    
-
     
     /*-----------------------いっぱいの円----------------------*/
     for (int i=0; i<NUM; i++) {
@@ -74,10 +72,6 @@ void ofApp::update(){
         loc_x[i] = loc_x[i] + speed_x[i];
         loc_y[i] = loc_y[i] + speed_y[i];
     }
-    
-
-    
-
 }
 
 //--------------------------------------------------------------
@@ -95,39 +89,82 @@ bool ofApp::isCountOver() {
 
 //--------------------------------------------------------------
 void ofApp::draw(){
- 
     
-  
-    
-    ofFill();
-    for(int i = 0; i < 30; i++){
-        ofSetColor(red[i], green[i], blue[i]);
-    ofDrawCircle(ofRandom(30,word_box_x), ofRandom(word_box_y,ofGetHeight() - word_box_y * 4 ), size_circle);
+    /*-----------------------白線の普通のやつ-----------------------*/
+    if(pattern_normal){
+        /*-----------------------テキストボックスの枠-----------------------*/
+        ofSetColor(255, 255, 255);
+        ofNoFill();
+        ofDrawRectangle(word_box_x, word_box_y, ofGetWidth() - word_box_x * 2, ofGetHeight() - word_box_y * 5);
+        
+        /*-----------------------Sendのbox(枠)-----------------------*/
+        
+         ofNoFill();
+         ofSetColor(255, 255, 255);
+         ofDrawRectangle(send_box_x, send_box_y + 70, ofGetWidth() - send_box_x * 2, 100);
+         ofSetColor(255 , 255, 255);
+         font_const_word.drawString("Send", ofGetWidth()/2-90 , ofGetHeight()/2 + 205);
     }
     
-    for(int i = 0; i < 30; i++){
-        ofSetColor(red[i], green[i], blue[i]);
-        ofDrawCircle(ofRandom(ofGetWidth()-word_box_x, ofGetWidth()- 20), ofRandom(word_box_y,ofGetHeight() - word_box_y * 4), size_circle);
-    }
     
-    for(int i = 0; i < 60; i++){
-        ofSetColor(red[i], green[i], blue[i]);
-        ofDrawCircle(ofRandom(30, ofGetWidth()-30), ofRandom(60,word_box_y), size_circle);
-    }
+    /*-----------------------ちょっとチカチカするやつ-----------------------*/
+    if(pattern_special){
+        
+        /*-----------------------テキストボックスの周りのやつ-----------------------*/
+        ofFill();
+        for(int i = 0; i < 30; i++){
+            ofSetColor(red[i], green[i], blue[i]);
+            ofDrawCircle(ofRandom(30,word_box_x), ofRandom(word_box_y,ofGetHeight() - word_box_y * 4 ), size_circle);
+        }
+        
+        for(int i = 0; i < 30; i++){
+            ofSetColor(red[i], green[i], blue[i]);
+            ofDrawCircle(ofRandom(ofGetWidth()-word_box_x, ofGetWidth()- 20), ofRandom(word_box_y,ofGetHeight() - word_box_y * 4), size_circle);
+        }
+        
+        for(int i = 0; i < 60; i++){
+            ofSetColor(red[i], green[i], blue[i]);
+            ofDrawCircle(ofRandom(30, ofGetWidth()-30), ofRandom(60,word_box_y), size_circle);
+        }
+        
+        for(int i = 0; i < 60; i++){
+            ofSetColor(red[i], green[i], blue[i]);
+            ofDrawCircle(ofRandom(30, ofGetWidth() -30), ofRandom(ofGetHeight() - word_box_y * 4,ofGetHeight() - word_box_y * 3 - 50), size_circle);
+        }
 
-    for(int i = 0; i < 60; i++){
-        ofSetColor(red[i], green[i], blue[i]);
-        ofDrawCircle(ofRandom(30, ofGetWidth() -30), ofRandom(ofGetHeight() - word_box_y * 4,ofGetHeight() - word_box_y * 3 - 50), size_circle);
+        /*-----------------------Sendのbox(枠)-----------------------*/
+        ofFill();
+        for(int i = 0; i < 20; i++){
+            ofSetColor(red[i], green[i], blue[i]);
+            ofDrawCircle(ofRandom(send_box_x,ofGetWidth() - send_box_x), ofRandom( send_box_y + 70,send_box_y + 50), size_circle);
+        }
+        
+        ofFill();
+        for(int i = 0; i < 20; i++){
+            ofSetColor(red[i], green[i], blue[i]);
+            ofDrawCircle(ofRandom(send_box_x,ofGetWidth() - send_box_x), ofRandom( send_box_y + 170,send_box_y + 190), size_circle);
+        }
+        
+        ofFill();
+        for(int i = 0; i < 10; i++){
+            ofSetColor(red[i], green[i], blue[i]);
+            ofDrawCircle(ofRandom(send_box_x - 20,send_box_x), ofRandom( send_box_y + 50,send_box_y + 190), size_circle);
+        }
+        
+        ofFill();
+        for(int i = 0; i < 10; i++){
+            ofSetColor(red[i], green[i], blue[i]);
+            ofDrawCircle(ofRandom(ofGetWidth() - send_box_x, (ofGetWidth() - send_box_x ) + 20), ofRandom( send_box_y + 50,send_box_y + 190), size_circle);
+        }
+        
+        ofSetColor(255 , 255, size_circle* 100);
+        font_const_word.drawString("Send", ofGetWidth()/2-90 , ofGetHeight()/2 + 205);
     }
-
-    
-    
-    ofSetColor(255, 255, 255);
-
     
     /*-----------------------定規-----------------------*/
     /*
-    
+    ofSetColor(255, 255, 255);
+     
     ofDrawLine(0, 200, ofGetWidth(), 200);
     for(int i; i < ofGetWidth();  i = i + 10){
         ofDrawLine(i, 190, i, 200);
@@ -137,26 +174,11 @@ void ofApp::draw(){
     for(int i = 0; i < ofGetHeight();  i = i + 10){
         ofDrawLine(190, i, 200, i);
     }
-
-     */
     
     /*-----------------------カーソルの描画-----------------------*/
     //ofDrawLine(cursor_x1, cursor_y1, cursor_x2, cursor_y2);
     
-     
-    /*-----------------------文字を入れるBox-----------------------*/
-    //中抜き
-    ofNoFill();
-    //ofDrawRectangle(word_box_x, word_box_y, ofGetWidth() - word_box_x * 2, ofGetHeight() - word_box_y * 5);
-    
-    /*-----------------------Sendのbox(枠)-----------------------*/
-    //中抜き
-    ofNoFill();
-    ofSetColor(size_circle* 100,255,  255);
-    ofDrawRectangle(send_box_x, send_box_y + 70, ofGetWidth() - send_box_x * 2, 100);
-    ofSetColor(255, 255, size_circle* 100);
-    font_const_word.drawString("Send", ofGetWidth()/2-90 , ofGetHeight()/2 + 205);
-    
+
     /*-----------------------Sendのカバー(しろ)-----------------------*/
     if(onButton){
         //ここまでofNoFillできたからここで変更
@@ -235,13 +257,10 @@ void ofApp::draw(){
     *---------------------------------------------------------------*/
     
     
-    if(currentPos > 10){
+   // if(currentPos > 10){
         ofSetColor(255,255,255);
-        font_const_word.drawString("Stop", ofGetWidth()/2-220 , ofGetHeight()/2);
-    }
-    
-  
-    
+        font_const_word.drawString("Stop", ofGetWidth()/2-120 , ofGetHeight()/2);
+    //}
     
     
 }
@@ -287,6 +306,18 @@ void ofApp::keyPressed(int key){
         
         if (sentences.at(currentPos).length() <= 0) {
             currentPos --;
+        }
+    }
+    
+    /*--------------------"fn"おしたとき切り替え--------------------*/
+    if (key == -1){//fnキー
+        num_normal++;
+        if(num_normal % 2 == 1){
+            pattern_normal = true;
+            pattern_special = false;
+        }else if(num_normal % 2 == 0){
+            pattern_normal = false;
+            pattern_special = true;
         }
     }
 }
@@ -349,8 +380,6 @@ void ofApp::mousePressed(int x, int y, int button){
     }
     
 }
-    
-
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){

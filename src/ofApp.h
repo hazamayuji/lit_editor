@@ -20,7 +20,6 @@ class ofApp : public ofBaseApp{
 		void update();
 		void draw();
     
-    
         /*------------------追加要素------------------*/
         bool isCountOver();
         void displayChar(int key);
@@ -36,11 +35,8 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-    
-    
-    
+
     /*-----------------------editor-----------------------*/
-    //std::array<string, 10> sentences;//10行までに制限(?)
     std::vector<string> sentences;//無限に行いける
     
     int currentPos = 0;//行のカウント
@@ -72,6 +68,7 @@ class ofApp : public ofBaseApp{
     ofTrueTypeFont type_word;
     
     /*-----------------------カーソル-----------------------*/
+    /*
     float cursor_x1 = 65;
     float cursor_x2 = 65;
     float cursor_y1 = 105;
@@ -95,11 +92,15 @@ class ofApp : public ofBaseApp{
     /*--------------キーボード押したときにランダムでアニメーションを描画--------------*/
     int rand;
     
-    
-    
+    /*-----------------------musicに関すること-----------------------*/
     int size_circle = 0;
     float *volume;
     ofSoundPlayer soundplayer;
+    
+    /*-----------------------"fn"押したら切り替え-----------------------*/
+    bool pattern_normal = false;
+    bool pattern_special = true;
+    int num_normal = 0;
     
 };
 
