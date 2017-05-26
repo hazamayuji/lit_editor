@@ -90,6 +90,9 @@ bool ofApp::isCountOver() {
 //--------------------------------------------------------------
 void ofApp::draw(){
     
+    ofSetColor(255,255,255);
+    type_word.drawString("please press fn", ofGetWidth()/2-130 , ofGetHeight() - 80);
+    
     /*-----------------------白線の普通のやつ-----------------------*/
     if(pattern_normal){
         /*-----------------------テキストボックスの枠-----------------------*/
@@ -161,24 +164,6 @@ void ofApp::draw(){
         font_const_word.drawString("Send", ofGetWidth()/2-90 , ofGetHeight()/2 + 205);
     }
     
-    /*-----------------------定規-----------------------*/
-    /*
-    ofSetColor(255, 255, 255);
-     
-    ofDrawLine(0, 200, ofGetWidth(), 200);
-    for(int i; i < ofGetWidth();  i = i + 10){
-        ofDrawLine(i, 190, i, 200);
-    }
-    
-    ofDrawLine(200, 0, 200, ofGetHeight());
-    for(int i = 0; i < ofGetHeight();  i = i + 10){
-        ofDrawLine(190, i, 200, i);
-    }
-    
-    /*-----------------------カーソルの描画-----------------------*/
-    //ofDrawLine(cursor_x1, cursor_y1, cursor_x2, cursor_y2);
-    
-
     /*-----------------------Sendのカバー(しろ)-----------------------*/
     if(onButton){
         //ここまでofNoFillできたからここで変更
@@ -203,6 +188,7 @@ void ofApp::draw(){
         type_word.drawString(sentence, word_box_x + 10, start_y + word_height);
         //それが新しいのを生成したらyをプラス
         word_height += y;
+        
     }
     
     /*-----------------------キーボード押したときに字を描画-----------------------*/
@@ -245,6 +231,12 @@ void ofApp::draw(){
             ofDrawCircle(loc_x[i], loc_y[i], radius_key[i]);
             }
     }
+    
+    if(currentPos > 10){
+        ofSetColor(255,255,255);
+        font_const_word.drawString("Stop", ofGetWidth()/2-100 , ofGetHeight()/2);
+    }
+
    
    /*------------------いらんけど大事なこと(ofximgui)-------------------*
     *          ofFill();//ofximgui                                  *
@@ -256,13 +248,24 @@ void ofApp::draw(){
     *          gui.end();                                           *
     *---------------------------------------------------------------*/
     
+    /*-----------------------定規-----------------------*/
+    /*
+     ofSetColor(255, 255, 255);
+     
+     ofDrawLine(0, 200, ofGetWidth(), 200);
+     for(int i; i < ofGetWidth();  i = i + 10){
+     ofDrawLine(i, 190, i, 200);
+     }
+     
+     ofDrawLine(200, 0, 200, ofGetHeight());
+     for(int i = 0; i < ofGetHeight();  i = i + 10){
+     ofDrawLine(190, i, 200, i);
+     }
+     
+     /*-----------------------カーソルの描画-----------------------*/
+    //ofDrawLine(cursor_x1, cursor_y1, cursor_x2, cursor_y2);
     
-   // if(currentPos > 10){
-        ofSetColor(255,255,255);
-        font_const_word.drawString("Stop", ofGetWidth()/2-120 , ofGetHeight()/2);
-    //}
-    
-    
+    //一文字のサイズ(H) = 20
 }
 
 //--------------------------------------------------------------
@@ -378,7 +381,6 @@ void ofApp::mousePressed(int x, int y, int button){
         ofstream out_file("Desktop/of_v0.9.8_osx_release/apps/myApps/lit_editor/bin/data/test01.txt");
         */
     }
-    
 }
 
 //--------------------------------------------------------------

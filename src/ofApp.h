@@ -68,7 +68,7 @@ class ofApp : public ofBaseApp{
     ofTrueTypeFont type_word;
     
     /*-----------------------カーソル-----------------------*/
-    /*
+    
     float cursor_x1 = 65;
     float cursor_x2 = 65;
     float cursor_y1 = 105;
